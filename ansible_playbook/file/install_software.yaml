@@ -1,0 +1,29 @@
+- name: Install Software
+  hosts: yum
+  tasks:
+    - name: Install Software.
+      yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - nc
+          - telnet
+          - net-tools
+          - wget
+          - lsof
+          - vim
+          - lrzsz
+          - jq
+          - bash-completion
+          - zip
+          - unzip
+          - epel-release
+          - tree
+          - ntpdate
+          - gcc
+          - gcc-c++
+          - make
+          - cmake
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2

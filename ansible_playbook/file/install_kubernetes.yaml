@@ -1,0 +1,32 @@
+---
+  - hosts: k8s_nodes
+    tasks:
+      - name: 01- distribute the script.
+        copy:
+          src: '{{ item.src }}'
+          dest: '{{ item.dest }}'
+          owner: root
+          group: root
+        with_items:
+          - { src: /k8s_auto_install/ansible_playbook/scripts/kernel_upgrade.sh, dest: /k8s_install/scripts }
+          - { src: /k8s_auto_install/ansible_playbook/tools/kubernetes.repo, dest: /etc/yum.repos.d }
+      - name: 02- execute repo.sh script.
+        script: "/k8s_auto_install/ansible_playbook/scripts/repo.sh"
+      - name: 03- execute user_create.sh
+        script: "/k8s_auto_install/ansible_playbook/scripts/user_create.sh"
+      - name: 04- execute os_init.sh script.
+        script: "/k8s_auto_install/ansible_playbook/scripts/os_init.sh"
+      - name: 05- execute install_ipvs.sh script.
+        script: "/k8s_auto_install/ansible_playbook/scripts/install_ipvs.sh"
+      - name: 06- execute install_docker.sh script.
+        script: "/k8s_auto_install/ansible_playbook/scripts/install_docker.sh"
+      # - name: 07- execute install_k8s.sh script.
+      #   script: "/k8s_auto_install/ansible_playbook/scripts/install_k8s.sh"
+      - name: 07- install kubeadm kubectl kubelet
+        yum:
+          name: "{{ packages }}"
+        vars:
+          packages:
+            - kubelet-1.22.3
+            - kubeadm-1.22.3
+            - kubectl-1.22.3
